@@ -10,7 +10,11 @@ class BlockChain implements BlockChainType {
     this.pendingTransactions = [];
   }
 
-  createNewBlock(nonce: number, previousBlockHash: string, hash: string): Block {
+  createNewBlock(
+    nonce: number,
+    previousBlockHash: string,
+    hash: string
+  ): Block {
     const newBlock = new Block(
       this.chain.length + 1,
       new Date(),
@@ -33,6 +37,22 @@ class BlockChain implements BlockChainType {
 
   getBlockByFirst(): BlockType | undefined {
     return this.chain.length > 1 ? this.chain[0] : undefined;
+  }
+
+  findBlockByHash(hash: string): BlockType | undefined {
+    for (let i = 0; i < this.chain.length; i++) {
+      const block = this.chain[i];
+      if (block.hash === hash) return block;
+    }
+    return undefined;
+  }
+
+  findBlockByIndex(index: number): BlockType | undefined {
+    for (let i = 0; i < this.chain.length; i++) {
+      const block = this.chain[i];
+      if (block.index === index) return block;
+    }
+    return undefined;
   }
 
   createNewTransaction(
@@ -60,7 +80,7 @@ class Block implements BlockType {
   public transactions: any;
   public nonce: number;
   public hash: string;
-  public previousBlockHash: any;
+  public previousBlockHash: string;
 
   constructor(
     index: number,
@@ -68,7 +88,7 @@ class Block implements BlockType {
     transactions: any,
     nonce: number,
     hash: string,
-    previousBlockHash: any
+    previousBlockHash: string
   ) {
     this.index = index;
     this.timestamp = timestamp;
@@ -98,6 +118,13 @@ class Transaction implements TransactionType {
     this.sender = sender;
     this.recipient = recipient;
   }
+  print() {
+    console.log("-------------------------------------------");
+    console.log(`Amount: ${this.amount}`);
+    console.log(`Sender: ${this.sender}`);
+    console.log(`Recipient: ${this.recipient}`);
+    console.log("-------------------------------------------");
+  }
 }
 
 const bitcoin = new BlockChain();
@@ -109,8 +136,4 @@ bitcoin.createNewBlock(
 bitcoin.createNewBlock(8971, "00HDNFHEWEDGRBCHRNKG", "00HDYENRHFBKDURNFHNE");
 bitcoin.createNewBlock(9761, "00JOIRNNOIHWEOUBNEWO", "00NJKRUOQWNOIWHRNOWQ");
 bitcoin.printAllBlocks();
-// console.log(bitcoin.getBlockByFirst());
-// console.log(bitcoin.getBlockLast());
-// const first = bitcoin.getBlockByFirst();
 
-// first?.print();

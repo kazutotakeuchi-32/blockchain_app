@@ -7,4 +7,6 @@ export interface BlockChain {
   createNewTransaction(amount: number, sender: string, recipient: string): Transaction
   getBlockLast(): Block | undefined;
   printAllBlocks(): void;
+  findBlockByHash(hash: string): Block | undefined;
+  findBlockByIndex(index: number): Block | undefined
 }
