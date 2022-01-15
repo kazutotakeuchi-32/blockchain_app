@@ -16,6 +16,7 @@ class BlockChain implements BlockChainType {
     previousBlockHash: string,
     hash: string
   ): Block {
+    this.pendingTransactions = [];
     const newBlock = new Block(
       this.chain.length + 1,
       new Date(),
@@ -24,10 +25,8 @@ class BlockChain implements BlockChainType {
       hash,
       previousBlockHash
     );
-
     this.pendingTransactions = [];
     this.chain.push(newBlock);
-
     return newBlock;
   }
 
@@ -206,12 +205,29 @@ HelperFunction.getPendingTransactions(hiDollar);
 console.log(
   hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions)
 );
-console.log(
-  hiDollar
-    .hashBlock(
-      "0AA0IAIJIJUIGGUGUYG",
-      hiDollar.pendingTransactions,
-      hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions)
-    )
-    .substring(0, 4)
+
+// マイニングの流れ
+// nonceを求める
+// 認証後、blockを作成する
+
+const hash = hiDollar.hashBlock(
+  hiDollar.getBlockLast()?.hash as string,
+  hiDollar.pendingTransactions,
+  hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions)
 );
+
+// マイニング
+hiDollar.createNewBlock(
+  hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions),
+  hiDollar.getBlockLast()?.hash as string,
+  hiDollar.hashBlock(
+    hiDollar.getBlockLast()?.hash as string,
+    hiDollar.pendingTransactions,
+    hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions)
+  )
+);
+
+// ブロックチェーン一覧
+HelperFunction.getChain(hiDollar);
+// トランザクション一覧　output:[]
+HelperFunction.getPendingTransactions(hiDollar);
