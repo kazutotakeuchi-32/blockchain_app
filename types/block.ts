@@ -4,4 +4,5 @@ export interface Block {
   transactions: any;
   nonce: number;
   hash: string;
+  print(): void
 }

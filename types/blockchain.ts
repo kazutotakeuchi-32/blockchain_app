@@ -6,4 +6,5 @@ export interface BlockChain {
   createNewBlock(nonce: number, previousBlockHash: string, hash: string): Block;
   createNewTransaction(amount: number, sender: string, recipient: string): Transaction
   getBlockLast(): Block | undefined;
+  printAllBlocks(): void;
 }

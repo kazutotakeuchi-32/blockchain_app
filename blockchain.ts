@@ -44,6 +44,14 @@ class BlockChain implements BlockChainType {
     this.pendingTransactions.push(newTransaction);
     return newTransaction;
   }
+
+  printAllBlocks(): void {
+    if (this.chain.length <= 0) return;
+    for (let i = 0; i < this.chain.length; i++) {
+      const block = this.chain[i];
+      block.print();
+    }
+  }
 }
 
 class Block implements BlockType {
@@ -69,6 +77,16 @@ class Block implements BlockType {
     this.hash = hash;
     this.previousBlockHash = previousBlockHash;
   }
+  print() {
+    console.log("-------------------------------------------");
+    console.log(`Block: ${this.index}`);
+    console.log(`Timestamp: ${this.timestamp}`);
+    console.log(`Transactions: ${this.transactions}`);
+    console.log(`Nonce: ${this.nonce}`);
+    console.log(`Hash: ${this.hash}`);
+    console.log(`Previous Block Hash: ${this.previousBlockHash}`);
+    console.log("-------------------------------------------");
+  }
 }
 
 class Transaction implements TransactionType {
@@ -90,7 +108,9 @@ bitcoin.createNewBlock(
 );
 bitcoin.createNewBlock(8971, "00HDNFHEWEDGRBCHRNKG", "00HDYENRHFBKDURNFHNE");
 bitcoin.createNewBlock(9761, "00JOIRNNOIHWEOUBNEWO", "00NJKRUOQWNOIWHRNOWQ");
+bitcoin.printAllBlocks();
+// console.log(bitcoin.getBlockByFirst());
+// console.log(bitcoin.getBlockLast());
+// const first = bitcoin.getBlockByFirst();
 
-console.log(bitcoin);
-console.log(bitcoin.getBlockByFirst());
-console.log(bitcoin.getBlockLast());
+// first?.print();
