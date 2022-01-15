@@ -127,6 +127,21 @@ class Transaction implements TransactionType {
   }
 }
 
+class HelperFunction {
+  public static getBlockChain(blockChain: BlockChainType | undefined): void {
+    if (blockChain === undefined) return;
+    console.log(blockChain);
+  }
+  public static getChain(blockChain: BlockChainType): void {
+    if (blockChain === undefined) return;
+    console.log(blockChain);
+  }
+  public static getPendingTransactions(blockChain: BlockChainType): void {
+    if (blockChain === undefined) return;
+    console.log(blockChain.pendingTransactions);
+  }
+}
+
 const bitcoin = new BlockChain();
 bitcoin.createNewBlock(
   7653,
@@ -135,5 +150,11 @@ bitcoin.createNewBlock(
 );
 bitcoin.createNewBlock(8971, "00HDNFHEWEDGRBCHRNKG", "00HDYENRHFBKDURNFHNE");
 bitcoin.createNewBlock(9761, "00JOIRNNOIHWEOUBNEWO", "00NJKRUOQWNOIWHRNOWQ");
+
 bitcoin.printAllBlocks();
 
+bitcoin.createNewTransaction(1, "ALICEJSJSNWNN", "BOBDKENINOMDO");
+
+const hiDollar = new BlockChain();
+
+HelperFunction.getBlockChain(bitcoin);

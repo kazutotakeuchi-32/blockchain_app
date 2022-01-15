@@ -18,6 +18,22 @@ class BlockChain {
     getBlockByFirst() {
         return this.chain.length > 1 ? this.chain[0] : undefined;
     }
+    findBlockByHash(hash) {
+        for (let i = 0; i < this.chain.length; i++) {
+            const block = this.chain[i];
+            if (block.hash === hash)
+                return block;
+        }
+        return undefined;
+    }
+    findBlockByIndex(index) {
+        for (let i = 0; i < this.chain.length; i++) {
+            const block = this.chain[i];
+            if (block.index === index)
+                return block;
+        }
+        return undefined;
+    }
     createNewTransaction(amount, sender, recipient) {
         const newTransaction = new Transaction(amount, sender, recipient);
         this.pendingTransactions.push(newTransaction);
@@ -58,13 +74,36 @@ class Transaction {
         this.sender = sender;
         this.recipient = recipient;
     }
+    print() {
+        console.log("-------------------------------------------");
+        console.log(`Amount: ${this.amount}`);
+        console.log(`Sender: ${this.sender}`);
+        console.log(`Recipient: ${this.recipient}`);
+        console.log("-------------------------------------------");
+    }
+}
+class HelperFunction {
+    static getBlockChain(blockChain) {
+        if (blockChain === undefined)
+            return;
+        console.log(blockChain);
+    }
+    static getChain(blockChain) {
+        if (blockChain === undefined)
+            return;
+        console.log(blockChain);
+    }
+    static getPendingTransactions(blockChain) {
+        if (blockChain === undefined)
+            return;
+        console.log(blockChain.pendingTransactions);
+    }
 }
 const bitcoin = new BlockChain();
 bitcoin.createNewBlock(7653, "00KNWRUBWEJWENFOJNWO", "07HDFSKBWESUFBWEIBWIEUFBNW");
 bitcoin.createNewBlock(8971, "00HDNFHEWEDGRBCHRNKG", "00HDYENRHFBKDURNFHNE");
 bitcoin.createNewBlock(9761, "00JOIRNNOIHWEOUBNEWO", "00NJKRUOQWNOIWHRNOWQ");
 bitcoin.printAllBlocks();
-// console.log(bitcoin.getBlockByFirst());
-// console.log(bitcoin.getBlockLast());
-// const first = bitcoin.getBlockByFirst();
-// first?.print();
+bitcoin.createNewTransaction(1, "ALICEJSJSNWNN", "BOBDKENINOMDO");
+const hiDollar = new BlockChain();
+HelperFunction.getBlockChain(bitcoin);
