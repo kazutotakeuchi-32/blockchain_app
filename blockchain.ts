@@ -10,7 +10,7 @@ class BlockChain implements BlockChainType {
     this.pendingTransactions = [];
   }
 
-  createNewBlock(nonce: any, previousBlockHash: any, hash: any): Block {
+  createNewBlock(nonce: number, previousBlockHash: string, hash: string): Block {
     const newBlock = new Block(
       this.chain.length + 1,
       new Date(),
