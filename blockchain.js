@@ -1,5 +1,9 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const sha256_1 = __importDefault(require("sha256"));
 class BlockChain {
     constructor() {
         this.chain = [];
@@ -47,6 +51,22 @@ class BlockChain {
             block.print();
         }
     }
+    hashBlock(previousBlockHash, currentBlockData, nonce) {
+        const dataAsString = previousBlockHash + nonce.toString() + JSON.stringify(currentBlockData);
+        const hash = (0, sha256_1.default)(dataAsString);
+        return hash;
+    }
+    // マイニング競争のロジック
+    // マシンパワーが強いユーザが強い
+    proofOfWork(previousBlockHash, currentBlockData) {
+        let nonce = 0;
+        let hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
+        while (hash.substring(0, 4) !== "0000") {
+            nonce++;
+            hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
+        }
+        return nonce;
+    }
 }
 class Block {
     constructor(index, timestamp, transactions, nonce, hash, previousBlockHash) {
@@ -91,7 +111,7 @@ class HelperFunction {
     static getChain(blockChain) {
         if (blockChain === undefined)
             return;
-        console.log(blockChain);
+        console.log(blockChain.chain);
     }
     static getPendingTransactions(blockChain) {
         if (blockChain === undefined)
@@ -105,5 +125,23 @@ bitcoin.createNewBlock(8971, "00HDNFHEWEDGRBCHRNKG", "00HDYENRHFBKDURNFHNE");
 bitcoin.createNewBlock(9761, "00JOIRNNOIHWEOUBNEWO", "00NJKRUOQWNOIWHRNOWQ");
 bitcoin.printAllBlocks();
 bitcoin.createNewTransaction(1, "ALICEJSJSNWNN", "BOBDKENINOMDO");
-const hiDollar = new BlockChain();
+bitcoin.createNewTransaction(10, "ALICEJSJSNWNN", "BOBDKENINOMDO");
+bitcoin.createNewBlock(9731, "00JOIRNNOIHWEOUBNEWO", "00NJKRUOQWNOIWHRNOWQ");
 HelperFunction.getBlockChain(bitcoin);
+// const bitcoin1 = new BlockChain();
+// const previousBlockHash = "0AA0IAIJIJUIGGUGUYG";
+// const nonce = 100;
+// console.log(bitcoin.hashBlock(previousBlockHash, bitcoin.pendingTransactions, nonce));
+const hiDollar = new BlockChain();
+hiDollar.createNewBlock(8971, "00HDNFHEWEDGRBCHRNKG", "00HDYENRHFBKDURNFHNE");
+hiDollar.createNewBlock(9761, "00JOIRNNOIHWEOUBNEWO", "00NJKRUOQWNOIWHRNOWQ");
+hiDollar.createNewTransaction(1, "ALICEJSJSNWNN", "BOBDKENINOMDO");
+hiDollar.createNewTransaction(20, "ALICEJSJSNWNN", "BOBDKENINOMDO");
+hiDollar.createNewTransaction(40, "ALICEJSJSNWNN", "BOBDKENINOMDO");
+hiDollar.createNewTransaction(200, "ALICEJSJSNWNN", "BOBDKENINOMDO");
+// ブロックチェーン一覧
+HelperFunction.getChain(hiDollar);
+// トランザクション一覧
+HelperFunction.getPendingTransactions(hiDollar);
+console.log(hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions));
+console.log(hiDollar.hashBlock("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions, hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions)).substring(0, 4));
