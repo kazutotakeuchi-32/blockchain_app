@@ -42,14 +42,13 @@ class Transaction implements TransactionType {
           : this.recipient.coin + this.amount;
       log.write(this.format());
     } catch (error) {
-      const errorMessage = (error as Error).message;
+      const errorMessage = (error as Error).message || "";
       console.warn(errorMessage);
       throw new Error(errorMessage);
     }
   }
   // 取引完了
   // 仮のコインを本来のコインに移動する
-  // 仮のコインを0にする
   completion(): void {
     this.sender.coin = this.sender.tmpCoin;
     this.recipient.coin = this.recipient.tmpCoin;
