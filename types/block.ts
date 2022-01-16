@@ -5,4 +5,6 @@ export interface Block {
   nonce: number;
   hash: string;
   print(): void
+  getHash(): string
+
 }

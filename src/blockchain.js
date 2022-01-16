@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", { value: true });
+const block_1 = __importDefault(require("./block"));
 const sha256_1 = __importDefault(require("sha256"));
 class BlockChain {
     constructor() {
@@ -12,7 +13,7 @@ class BlockChain {
     }
     createNewBlock(nonce, previousBlockHash, hash) {
         this.pendingTransactions = [];
-        const newBlock = new Block(this.chain.length + 1, new Date(), this.pendingTransactions, nonce, hash, previousBlockHash);
+        const newBlock = new block_1.default(this.chain.length + 1, new Date(), this.pendingTransactions, nonce, hash, previousBlockHash);
         this.pendingTransactions = [];
         this.chain.push(newBlock);
         return newBlock;
@@ -68,26 +69,6 @@ class BlockChain {
             hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
         }
         return nonce;
-    }
-}
-class Block {
-    constructor(index, timestamp, transactions, nonce, hash, previousBlockHash) {
-        this.index = index;
-        this.timestamp = timestamp;
-        this.transactions = transactions;
-        this.nonce = nonce;
-        this.hash = hash;
-        this.previousBlockHash = previousBlockHash;
-    }
-    print() {
-        console.log("-------------------------------------------");
-        console.log(`Block: ${this.index}`);
-        console.log(`Timestamp: ${this.timestamp}`);
-        console.log(`Transactions: ${this.transactions}`);
-        console.log(`Nonce: ${this.nonce}`);
-        console.log(`Hash: ${this.hash}`);
-        console.log(`Previous Block Hash: ${this.previousBlockHash}`);
-        console.log("-------------------------------------------");
     }
 }
 class Transaction {
@@ -149,9 +130,9 @@ console.log(hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransact
 // マイニングの流れ
 // nonceを求める
 // 認証後、blockを作成する
-const hash = hiDollar.hashBlock((_a = hiDollar.getBlockLast()) === null || _a === void 0 ? void 0 : _a.hash, hiDollar.pendingTransactions, hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions));
+const hash = hiDollar.hashBlock((_a = hiDollar.getBlockLast()) === null || _a === void 0 ? void 0 : _a.getHash(), hiDollar.pendingTransactions, hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions));
 // マイニング
-hiDollar.createNewBlock(hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions), (_b = hiDollar.getBlockLast()) === null || _b === void 0 ? void 0 : _b.hash, hiDollar.hashBlock((_c = hiDollar.getBlockLast()) === null || _c === void 0 ? void 0 : _c.hash, hiDollar.pendingTransactions, hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions)));
+hiDollar.createNewBlock(hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions), (_b = hiDollar.getBlockLast()) === null || _b === void 0 ? void 0 : _b.getHash(), hiDollar.hashBlock((_c = hiDollar.getBlockLast()) === null || _c === void 0 ? void 0 : _c.getHash(), hiDollar.pendingTransactions, hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions)));
 // ブロックチェーン一覧
 HelperFunction.getChain(hiDollar);
 // トランザクション一覧　output:[]

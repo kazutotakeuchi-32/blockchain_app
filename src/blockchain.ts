@@ -1,6 +1,9 @@
-import { BlockChain as BlockChainType } from "./types/blockchain";
-import { Block as BlockType } from "./types/block";
-import { Transaction as TransactionType } from "./types/transaction";
+import { BlockChain as BlockChainType } from "../types/blockchain";
+import { Block as BlockType } from "../types/block";
+import Block from "./block";
+import { Transaction as TransactionType } from "../types/transaction";
+import Transaction from "./transaction";
+import HelperFunction from "./helper_function";
 import sha256 from "sha256";
 
 class BlockChain implements BlockChainType {
@@ -99,74 +102,6 @@ class BlockChain implements BlockChainType {
   }
 }
 
-class Block implements BlockType {
-  public index: number;
-  public timestamp: Date;
-  public transactions: any;
-  public nonce: number;
-  public hash: string;
-  public previousBlockHash: string;
-
-  constructor(
-    index: number,
-    timestamp: Date,
-    transactions: any,
-    nonce: number,
-    hash: string,
-    previousBlockHash: string
-  ) {
-    this.index = index;
-    this.timestamp = timestamp;
-    this.transactions = transactions;
-    this.nonce = nonce;
-    this.hash = hash;
-    this.previousBlockHash = previousBlockHash;
-  }
-  print() {
-    console.log("-------------------------------------------");
-    console.log(`Block: ${this.index}`);
-    console.log(`Timestamp: ${this.timestamp}`);
-    console.log(`Transactions: ${this.transactions}`);
-    console.log(`Nonce: ${this.nonce}`);
-    console.log(`Hash: ${this.hash}`);
-    console.log(`Previous Block Hash: ${this.previousBlockHash}`);
-    console.log("-------------------------------------------");
-  }
-}
-
-class Transaction implements TransactionType {
-  public amount: number;
-  public sender: string;
-  public recipient: string;
-  constructor(amount: number, sender: string, recipient: string) {
-    this.amount = amount;
-    this.sender = sender;
-    this.recipient = recipient;
-  }
-  print() {
-    console.log("-------------------------------------------");
-    console.log(`Amount: ${this.amount}`);
-    console.log(`Sender: ${this.sender}`);
-    console.log(`Recipient: ${this.recipient}`);
-    console.log("-------------------------------------------");
-  }
-}
-
-class HelperFunction {
-  public static getBlockChain(blockChain: BlockChainType | undefined): void {
-    if (blockChain === undefined) return;
-    console.log(blockChain);
-  }
-  public static getChain(blockChain: BlockChainType): void {
-    if (blockChain === undefined) return;
-    console.log(blockChain.chain);
-  }
-  public static getPendingTransactions(blockChain: BlockChainType): void {
-    if (blockChain === undefined) return;
-    console.log(blockChain.pendingTransactions);
-  }
-}
-
 const bitcoin = new BlockChain();
 bitcoin.createNewBlock(
   7653,
@@ -211,7 +146,7 @@ console.log(
 // 認証後、blockを作成する
 
 const hash = hiDollar.hashBlock(
-  hiDollar.getBlockLast()?.hash as string,
+  hiDollar.getBlockLast()?.getHash() as string,
   hiDollar.pendingTransactions,
   hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions)
 );
@@ -219,9 +154,9 @@ const hash = hiDollar.hashBlock(
 // マイニング
 hiDollar.createNewBlock(
   hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions),
-  hiDollar.getBlockLast()?.hash as string,
+  hiDollar.getBlockLast()?.getHash() as string,
   hiDollar.hashBlock(
-    hiDollar.getBlockLast()?.hash as string,
+    hiDollar.getBlockLast()?.getHash() as string,
     hiDollar.pendingTransactions,
     hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions)
   )
