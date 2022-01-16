@@ -86,7 +86,7 @@ class BlockChain {
     }
 }
 const kazuto = new user_1.default(1, "Kazuto", "kazukazu@test.com", "password", 200);
-const jun = new user_1.default(1, "jun", "junjun@test.com", "password", 100);
+const jun = new user_1.default(2, "jun", "junjun@test.com", "password", 100);
 const bitcoin = new BlockChain();
 bitcoin.createNewBlock(7653, "00KNWRUBWEJWENFOJNWO", "07HDFSKBWESUFBWEIBWIEUFBNW");
 bitcoin.createNewBlock(8971, "00HDNFHEWEDGRBCHRNKG", "00HDYENRHFBKDURNFHNE");

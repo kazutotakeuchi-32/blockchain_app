@@ -30,7 +30,6 @@ class BlockChain implements BlockChainType {
         transaction.recipient.tmpCoin = 0;
       }
     }
-
     this.pendingTransactions = [];
     const newBlock = new Block(
       this.chain.length + 1,
@@ -117,7 +116,7 @@ class BlockChain implements BlockChainType {
 }
 
 const kazuto = new User(1, "Kazuto", "kazukazu@test.com", "password", 200);
-const jun = new User(1, "jun", "junjun@test.com", "password", 100);
+const jun = new User(2, "jun", "junjun@test.com", "password", 100);
 
 const bitcoin = new BlockChain();
 bitcoin.createNewBlock(
