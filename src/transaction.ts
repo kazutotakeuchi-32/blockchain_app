@@ -1,4 +1,5 @@
 import { Transaction as TransactionType } from "../types/transaction";
+import Log from "./log";
 import User from "./user";
 
 class Transaction implements TransactionType {
@@ -12,13 +13,17 @@ class Transaction implements TransactionType {
   }
   print() {
     console.log("-------------------------------------------");
-    console.log(`Amount: ${this.amount}`);
-    console.log(`Sender: ${this.sender}`);
-    console.log(`Recipient: ${this.recipient}`);
+    console.log(`取引金額 ${this.amount}`);
+    console.log(
+      `送金者: ${this.sender.name}\nコイン残高: ${this.sender.tmpCoin}`
+    );
+    console.log(
+      `受金者: ${this.recipient.name}\nコイン残高: ${this.recipient.tmpCoin}`
+    );
     console.log("-------------------------------------------");
   }
   // 取引中
-  settlement() {
+  settlement(log: Log) {
     try {
       if (
         this.sender.coin - this.amount < 0 ||
@@ -35,11 +40,7 @@ class Transaction implements TransactionType {
         this.recipient.tmpCoin > 0
           ? this.recipient.tmpCoin + this.amount
           : this.recipient.coin + this.amount;
-      console.log("----------------------------------------------");
-      console.log(this.amount);
-      console.log(this.sender.tmpCoin);
-      console.log(this.recipient.tmpCoin);
-      console.log("----------------------------------------------");
+      log.write(this.format());
     } catch (error) {
       const errorMessage = (error as Error).message;
       console.warn(errorMessage);
@@ -52,6 +53,11 @@ class Transaction implements TransactionType {
   completion(): void {
     this.sender.coin = this.sender.tmpCoin;
     this.recipient.coin = this.recipient.tmpCoin;
+  }
+
+  format(): string {
+    const output = `-------------------------------------------\n取引金額 ${this.amount}\n送金者: ${this.sender.name}\nコイン残高: ${this.sender.tmpCoin}\n受金者: ${this.recipient.name}\nコイン残高: ${this.recipient.tmpCoin}\n-------------------------------------------`;
+    return output;
   }
 }
 

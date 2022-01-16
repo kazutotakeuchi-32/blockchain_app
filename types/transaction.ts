@@ -1,3 +1,4 @@
+import Log from "../src/log";
 import { User } from "./user";
 
 export interface Transaction {
@@ -5,6 +6,7 @@ export interface Transaction {
   sender: User;
   recipient: User;
   print(): void;
-  settlement(): void;
+  settlement(log: Log): void;
   completion(): void;
+  format(): string
 }

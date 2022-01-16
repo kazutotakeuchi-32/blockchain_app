@@ -7,21 +7,26 @@ import HelperFunction from "./helper_function";
 import sha256 from "sha256";
 import User from "./user";
 import { User as UserType } from "../types/user";
+import Log from "./log";
 
 class BlockChain implements BlockChainType {
   public chain: Block[];
   public pendingTransactions: TransactionType[];
+  public log: Log;
   constructor() {
     this.chain = [];
     this.pendingTransactions = [];
+    this.log = new Log();
   }
-
   createNewBlock(
     nonce: number,
     previousBlockHash: string,
     hash: string
   ): Block {
     const index = this.pendingTransactions.length;
+    // this.log.write(
+    //   this.pendingTransactions
+    // )
     for (let i = 0; i < this.pendingTransactions.length; i++) {
       const transaction = this.pendingTransactions[i];
       transaction.completion();
@@ -72,10 +77,11 @@ class BlockChain implements BlockChainType {
   createNewTransaction(
     amount: number,
     sender: UserType,
-    recipient: UserType
+    recipient: UserType,
+    log: Log
   ): TransactionType {
     const newTransaction = new Transaction(amount, sender, recipient);
-    newTransaction.settlement();
+    newTransaction.settlement(log);
     this.pendingTransactions.push(newTransaction);
     return newTransaction;
   }
@@ -145,10 +151,10 @@ console.log(
 const hiDollar = new BlockChain();
 hiDollar.createNewBlock(8971, "00HDNFHEWEDGRBCHRNKG", "00HDYENRHFBKDURNFHNE");
 hiDollar.createNewBlock(9761, "00JOIRNNOIHWEOUBNEWO", "00NJKRUOQWNOIWHRNOWQ");
-hiDollar.createNewTransaction(10, kazuto, jun);
-hiDollar.createNewTransaction(20, kazuto, jun);
-hiDollar.createNewTransaction(40, kazuto, jun);
-hiDollar.createNewTransaction(130, kazuto, jun);
+hiDollar.createNewTransaction(10, kazuto, jun, hiDollar.log);
+hiDollar.createNewTransaction(20, kazuto, jun, hiDollar.log);
+hiDollar.createNewTransaction(40, kazuto, jun, hiDollar.log);
+hiDollar.createNewTransaction(130, kazuto, jun, hiDollar.log);
 // ブロックチェーン一覧
 HelperFunction.getChain(hiDollar);
 // トランザクション一覧
@@ -185,3 +191,5 @@ hiDollar.createNewBlock(
 // kazuto 0 jun 300
 console.log(`kazuto coin: ${kazuto.coin}`);
 console.log(`jun coin: ${jun.coin}`);
+
+hiDollar.log.print();

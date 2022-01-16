@@ -1,23 +1,20 @@
-import { Transaction } from "../types/transaction";
 import { Log as LogType } from "../types/log";
 // 全体の取引データ管理
 
 class Log implements LogType {
-  public log: [Transaction[]];
+  public log: string[];
   constructor() {
-    this.log = [[]];
+    this.log = [];
   }
-  write(transaction: Transaction[]): void {
-    this.log.push(transaction);
+  write(str: string): void {
+    this.log.push(str);
   }
   print(): void {
     if (this.log.length <= 0) return;
+    console.log("************ LOG *************");
     for (let i = 0; i < this.log.length; i++) {
-      const trnsactions = this.log[i];
-      for (let j = 0; j < trnsactions.length; j++) {
-        const transaction = trnsactions[j];
-        transaction.print();
-      }
+      const result = this.log[i];
+      console.log(result);
     }
   }
 }

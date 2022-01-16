@@ -9,13 +9,18 @@ const transaction_1 = __importDefault(require("./transaction"));
 const helper_function_1 = __importDefault(require("./helper_function"));
 const sha256_1 = __importDefault(require("sha256"));
 const user_1 = __importDefault(require("./user"));
+const log_1 = __importDefault(require("./log"));
 class BlockChain {
     constructor() {
         this.chain = [];
         this.pendingTransactions = [];
+        this.log = new log_1.default();
     }
     createNewBlock(nonce, previousBlockHash, hash) {
         const index = this.pendingTransactions.length;
+        // this.log.write(
+        //   this.pendingTransactions
+        // )
         for (let i = 0; i < this.pendingTransactions.length; i++) {
             const transaction = this.pendingTransactions[i];
             transaction.completion();
@@ -53,9 +58,9 @@ class BlockChain {
         }
         return undefined;
     }
-    createNewTransaction(amount, sender, recipient) {
+    createNewTransaction(amount, sender, recipient, log) {
         const newTransaction = new transaction_1.default(amount, sender, recipient);
-        newTransaction.settlement();
+        newTransaction.settlement(log);
         this.pendingTransactions.push(newTransaction);
         return newTransaction;
     }
@@ -103,10 +108,10 @@ console.log(bitcoin.hashBlock(previousBlockHash, bitcoin.pendingTransactions, no
 const hiDollar = new BlockChain();
 hiDollar.createNewBlock(8971, "00HDNFHEWEDGRBCHRNKG", "00HDYENRHFBKDURNFHNE");
 hiDollar.createNewBlock(9761, "00JOIRNNOIHWEOUBNEWO", "00NJKRUOQWNOIWHRNOWQ");
-hiDollar.createNewTransaction(10, kazuto, jun);
-hiDollar.createNewTransaction(20, kazuto, jun);
-hiDollar.createNewTransaction(40, kazuto, jun);
-hiDollar.createNewTransaction(130, kazuto, jun);
+hiDollar.createNewTransaction(10, kazuto, jun, hiDollar.log);
+hiDollar.createNewTransaction(20, kazuto, jun, hiDollar.log);
+hiDollar.createNewTransaction(40, kazuto, jun, hiDollar.log);
+hiDollar.createNewTransaction(130, kazuto, jun, hiDollar.log);
 // ブロックチェーン一覧
 helper_function_1.default.getChain(hiDollar);
 // トランザクション一覧
@@ -125,3 +130,4 @@ hiDollar.createNewBlock(hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pen
 // kazuto 0 jun 300
 console.log(`kazuto coin: ${kazuto.coin}`);
 console.log(`jun coin: ${jun.coin}`);
+hiDollar.log.print();

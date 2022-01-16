@@ -1,8 +1,5 @@
-import Transaction from "../src/transaction";
-
 export interface Log {
-  log:[ Transaction[]]
-  write(transaction: Transaction[]): void
-  print(): void
+  log: string[];
+  write(str: string): void;
+  print(): void;
 }
-
