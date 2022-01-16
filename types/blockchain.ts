@@ -1,13 +1,14 @@
 import { Block } from "./block";
 import { Transaction } from "./transaction";
+import { User } from "./user";
 export interface BlockChain {
   chain: Block[];
   pendingTransactions: Transaction[];
   createNewBlock(nonce: number, previousBlockHash: string, hash: string): Block;
   createNewTransaction(
     amount: number,
-    sender: string,
-    recipient: string
+    sender: User,
+    recipient: User
   ): Transaction;
   getBlockLast(): Block | undefined;
   printAllBlocks(): void;
