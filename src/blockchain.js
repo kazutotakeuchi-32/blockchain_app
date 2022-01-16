@@ -15,9 +15,14 @@ class BlockChain {
         this.pendingTransactions = [];
     }
     createNewBlock(nonce, previousBlockHash, hash) {
+        const index = this.pendingTransactions.length;
         for (let i = 0; i < this.pendingTransactions.length; i++) {
             const transaction = this.pendingTransactions[i];
             transaction.completion();
+            if (index === i) {
+                transaction.sender.tmpCoin = 0;
+                transaction.recipient.tmpCoin = 0;
+            }
         }
         this.pendingTransactions = [];
         const newBlock = new block_1.default(this.chain.length + 1, new Date(), this.pendingTransactions, nonce, hash, previousBlockHash);
@@ -72,6 +77,7 @@ class BlockChain {
     proofOfWork(previousBlockHash, currentBlockData) {
         let nonce = 0;
         let hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
+        // 仮で条件を設定　（0000を超えるまで繰り返す）
         while (hash.substring(0, 4) !== "0000") {
             nonce++;
             hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
@@ -98,13 +104,9 @@ const hiDollar = new BlockChain();
 hiDollar.createNewBlock(8971, "00HDNFHEWEDGRBCHRNKG", "00HDYENRHFBKDURNFHNE");
 hiDollar.createNewBlock(9761, "00JOIRNNOIHWEOUBNEWO", "00NJKRUOQWNOIWHRNOWQ");
 hiDollar.createNewTransaction(10, kazuto, jun);
-console.log(kazuto.tmpCoin, jun.tmpCoin);
 hiDollar.createNewTransaction(20, kazuto, jun);
-console.log(kazuto.tmpCoin, jun.tmpCoin);
 hiDollar.createNewTransaction(40, kazuto, jun);
-console.log(kazuto.tmpCoin, jun.tmpCoin);
-hiDollar.createNewTransaction(200, kazuto, jun);
-console.log(kazuto.tmpCoin, jun.tmpCoin);
+hiDollar.createNewTransaction(130, kazuto, jun);
 // ブロックチェーン一覧
 helper_function_1.default.getChain(hiDollar);
 // トランザクション一覧
@@ -117,7 +119,9 @@ const hash = hiDollar.hashBlock((_a = hiDollar.getBlockLast()) === null || _a ==
 // // マイニング
 hiDollar.createNewBlock(hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions), (_b = hiDollar.getBlockLast()) === null || _b === void 0 ? void 0 : _b.getHash(), hiDollar.hashBlock((_c = hiDollar.getBlockLast()) === null || _c === void 0 ? void 0 : _c.getHash(), hiDollar.pendingTransactions, hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions)));
 // ブロックチェーン一覧
-helper_function_1.default.getChain(hiDollar);
+// HelperFunction.getChain(hiDollar);
 // トランザクション一覧　output:[]
-helper_function_1.default.getPendingTransactions(hiDollar);
-console.log(kazuto.coin);
+// HelperFunction.getPendingTransactions(hiDollar);
+// kazuto 0 jun 300
+console.log(`kazuto coin: ${kazuto.coin}`);
+console.log(`jun coin: ${jun.coin}`);

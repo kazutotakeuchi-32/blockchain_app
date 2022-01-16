@@ -52,8 +52,6 @@ class Transaction implements TransactionType {
   completion(): void {
     this.sender.coin = this.sender.tmpCoin;
     this.recipient.coin = this.recipient.tmpCoin;
-    this.sender.tmpCoin = 0;
-    this.recipient.tmpCoin = 0;
   }
 }
 

@@ -21,10 +21,16 @@ class BlockChain implements BlockChainType {
     previousBlockHash: string,
     hash: string
   ): Block {
+    const index = this.pendingTransactions.length;
     for (let i = 0; i < this.pendingTransactions.length; i++) {
       const transaction = this.pendingTransactions[i];
       transaction.completion();
+      if (index === i) {
+        transaction.sender.tmpCoin = 0;
+        transaction.recipient.tmpCoin = 0;
+      }
     }
+
     this.pendingTransactions = [];
     const newBlock = new Block(
       this.chain.length + 1,
@@ -101,6 +107,7 @@ class BlockChain implements BlockChainType {
   ): number {
     let nonce = 0;
     let hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
+    // 仮で条件を設定　（0000を超えるまで繰り返す）
     while (hash.substring(0, 4) !== "0000") {
       nonce++;
       hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
@@ -140,14 +147,9 @@ const hiDollar = new BlockChain();
 hiDollar.createNewBlock(8971, "00HDNFHEWEDGRBCHRNKG", "00HDYENRHFBKDURNFHNE");
 hiDollar.createNewBlock(9761, "00JOIRNNOIHWEOUBNEWO", "00NJKRUOQWNOIWHRNOWQ");
 hiDollar.createNewTransaction(10, kazuto, jun);
-console.log(kazuto.tmpCoin, jun.tmpCoin);
-
 hiDollar.createNewTransaction(20, kazuto, jun);
-console.log(kazuto.tmpCoin, jun.tmpCoin);
 hiDollar.createNewTransaction(40, kazuto, jun);
-console.log(kazuto.tmpCoin, jun.tmpCoin);
-hiDollar.createNewTransaction(200, kazuto, jun);
-console.log(kazuto.tmpCoin, jun.tmpCoin);
+hiDollar.createNewTransaction(130, kazuto, jun);
 // ブロックチェーン一覧
 HelperFunction.getChain(hiDollar);
 // トランザクション一覧
@@ -165,7 +167,6 @@ const hash = hiDollar.hashBlock(
   hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions)
 );
 
-
 // // マイニング
 hiDollar.createNewBlock(
   hiDollar.proofOfWork("0AA0IAIJIJUIGGUGUYG", hiDollar.pendingTransactions),
@@ -178,9 +179,10 @@ hiDollar.createNewBlock(
 );
 
 // ブロックチェーン一覧
-HelperFunction.getChain(hiDollar);
+// HelperFunction.getChain(hiDollar);
 // トランザクション一覧　output:[]
-HelperFunction.getPendingTransactions(hiDollar);
+// HelperFunction.getPendingTransactions(hiDollar);
 
-
-console.log(kazuto.coin);
+// kazuto 0 jun 300
+console.log(`kazuto coin: ${kazuto.coin}`);
+console.log(`jun coin: ${jun.coin}`);

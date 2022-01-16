@@ -45,8 +45,6 @@ class Transaction {
     completion() {
         this.sender.coin = this.sender.tmpCoin;
         this.recipient.coin = this.recipient.tmpCoin;
-        this.sender.tmpCoin = 0;
-        this.recipient.tmpCoin = 0;
     }
 }
 exports.default = Transaction;
